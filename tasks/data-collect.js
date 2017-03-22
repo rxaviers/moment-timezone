@@ -16,19 +16,22 @@ module.exports = function (grunt) {
 				name    = file.replace(/\.zdump$/, ''),
 				abbrs   = [],
 				untils  = [],
-				offsets = [];
+				offsets = [],
+				isdsts = [];
 
 			lines.forEach(function (line) {
 				var parts  = line.split(/\s+/),
 					format = "MMM D HH:mm:ss YYYY",
 					utc    = moment.utc(parts.slice(2, 6).join(' '), format),
-					local  = moment.utc(parts.slice(9, 13).join(' '), format);
+					local  = moment.utc(parts.slice(9, 13).join(' '), format),
+					isdst  = + parts.slice(14).join('').split('=')[1];
 
 				if (parts.length < 13) { return; }
 
 				offsets.push(+utc.diff(local, 'minutes', true).toFixed(4));
 				untils.push(+utc);
 				abbrs.push(parts[13]);
+				isdsts.push(isdst);
 			});
 
 			data.push({
@@ -36,6 +39,7 @@ module.exports = function (grunt) {
 				abbrs      : abbrs,
 				untils     : untils,
 				offsets    : offsets,
+				isdsts     : isdsts,
 				population : populations[name] | 0
 			});
 		});

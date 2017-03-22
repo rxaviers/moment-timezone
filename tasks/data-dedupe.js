@@ -4,16 +4,21 @@ function dedupe(zone) {
 	var abbrs   = [],
 		untils  = [],
 		offsets = [],
+		isdsts = [],
 		length  = zone.abbrs.length,
 		i;
 
 	for (i = length - 1; i >= 0; i--) {
 		if (abbrs[0]   === zone.abbrs[i] &&
-			offsets[0] === zone.offsets[i]) { continue;}
+			offsets[0] === zone.offsets[i] &&
+			isdsts[0] === zone.isdsts[i]) {
+			continue;
+		}
 
 		untils.unshift(i === length - 1 ? Infinity : zone.untils[i + 1]);
 		abbrs.unshift(zone.abbrs[i]);
 		offsets.unshift(zone.offsets[i]);
+		isdsts.unshift(zone.isdsts[i]);
 	}
 
 	return {
@@ -21,6 +26,7 @@ function dedupe(zone) {
 		abbrs      : abbrs,
 		untils     : untils,
 		offsets    : offsets,
+		isdsts     : isdsts,
 		population : zone.population
 	};
 }
